@@ -1,14 +1,28 @@
 pipeline {
   agent any
+  
+  environment {
+    NO_COLOR = '1'
+  }
+
   stages {
     stage('Instalar deps') {
       steps {
         sh 'npm install'
       }
     }
+
+    stage('Subir ServeRest') {
+      steps {
+        sh '''
+          npx -y serverest@latest --port 3000 
+        '''
+      }
+    }
+
     stage('Executar testes API') {
       steps {
-        sh 'NO_COLOR=1 npx cypress run --spec "cypress/e2e/exercicio-api.cy.js"'
+        sh 'npx cypress run --spec "cypress/e2e/exercicio-api.cy.js"'
       }
     }
   }

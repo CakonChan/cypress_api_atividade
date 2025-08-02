@@ -1,21 +1,27 @@
 pipeline {
   agent any
-  
-  environment {
-    NO_COLOR = '1'
-  }
+
+  environment { NO_COLOR = '1' }
 
   stages {
     stage('Instalar deps') {
       steps {
-        sh 'npm install'
+        sh 'npm ci || npm install'
       }
     }
 
     stage('Subir ServeRest') {
       steps {
         sh '''
-          npx -y serverest@latest --port 3000 
+          npx -y serverest@latest --port 3000 >/dev/null 2>&1 &
+          echo $! > serverest.pid
+
+          for i in {1..30}; do
+            if curl -s -o /dev/null http://localhost:3000/usuarios; then
+              break
+            fi
+            sleep 1
+          done
         '''
       }
     }
@@ -24,6 +30,12 @@ pipeline {
       steps {
         sh 'npx cypress run --spec "cypress/e2e/exercicio-api.cy.js"'
       }
+    }
+  }
+
+  post {
+    always {
+      sh 'if [ -f serverest.pid ]; then kill $(cat serverest.pid) || true; fi'
     }
   }
 }

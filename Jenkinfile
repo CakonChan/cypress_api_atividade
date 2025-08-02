@@ -1,41 +1,30 @@
 pipeline {
   agent any
 
-  environment { NO_COLOR = '1' }
-
   stages {
     stage('Instalar deps') {
-      steps {
-        sh 'npm ci || npm install'
-      }
+      steps { sh 'npm install' }
     }
 
     stage('Subir ServeRest') {
       steps {
         sh '''
-          npx -y serverest@latest --port 3000 >/dev/null 2>&1 &
-          echo $! > serverest.pid
-
-          for i in {1..30}; do
-            if curl -s -o /dev/null http://localhost:3000/usuarios; then
-              break
-            fi
-            sleep 1
-          done
+          npx -y serverest@latest --port 3000 &
+          sleep 5
         '''
       }
     }
 
     stage('Executar testes API') {
       steps {
-        sh 'npx cypress run --spec "cypress/e2e/exercicio-api.cy.js"'
+        sh 'npx cypress run --spec cypress/e2e/exercicio-api.cy.js'
       }
     }
   }
 
   post {
     always {
-      sh 'if [ -f serverest.pid ]; then kill $(cat serverest.pid) || true; fi'
+      sh 'npx -y kill-port 3000 || true'
     }
   }
 }

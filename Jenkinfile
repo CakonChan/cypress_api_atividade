@@ -9,7 +9,8 @@ pipeline {
     stage('Subir ServeRest') {
       steps {
         sh '''
-          npx -y serverest@latest --port 3000
+          npx -y serverest@latest --port 3000 &
+          sleep 5
         '''
       }
     }

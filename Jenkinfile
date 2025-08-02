@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+  stages {
+    stage('Instalar deps') {
+      steps {
+        sh 'npm install'
+      }
+    }
+    stage('Executar testes API') {
+      steps {
+        sh 'NO_COLOR=1 npx cypress run --spec "cypress/e2e/exercicio-api.cy.js"'
+      }
+    }
+  }
+}

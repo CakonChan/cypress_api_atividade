@@ -2,15 +2,14 @@ pipeline {
   agent any
   environment { NO_COLOR = '1' }
   stages {
-    stage('Instalar deps') {
+    stage('Instalar NPM') {
       steps { sh 'npm install' }
     }
 
     stage('Subir ServeRest') {
       steps {
         sh '''
-          npx -y serverest@latest --port 3000 &
-          sleep 5
+          npx -y serverest@latest --port 3000
         '''
       }
     }
@@ -20,11 +19,11 @@ pipeline {
         sh 'npx cypress run --spec cypress/e2e/exercicio-api.cy.js'
       }
     }
-  }
 
-  post {
-    always {
-      sh 'npx -y kill-port 3000 || true'
+    stage('Encerrar ServeRest') {
+      steps {
+        sh 'npx -y kill-port 3000 || true'
+      }
     }
   }
 }

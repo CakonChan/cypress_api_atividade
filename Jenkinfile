@@ -17,7 +17,7 @@ pipeline {
 
     stage('Executar testes API') {
       steps {
-        sh 'NO_COLOR=1 npm test'
+        sh 'npm test'
       }
     }
 

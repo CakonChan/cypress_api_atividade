@@ -9,7 +9,7 @@ pipeline {
     stage('Subir ServeRest') {
       steps {
         sh '''
-          npx -y serverest@latest --port 3000 &
+          npm start &
           sleep 5
         '''
       }
@@ -17,7 +17,7 @@ pipeline {
 
     stage('Executar testes API') {
       steps {
-        sh 'npx cypress run --spec cypress/e2e/exercicio-api.cy.js'
+        sh 'npm test'
       }
     }
 

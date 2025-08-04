@@ -1,17 +1,13 @@
 {
-  "name": "crypress",
+  "name": "teste-api-cypress",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "npx cypress run --spec \"cypress/e2e/4-atividades/exercicio-e2e-feedback.cy.js\"",
-    "cy:dash": "npx cypress run --record --key 61458d98-a227-43d2-bea9-dea14521bb87"
+    "start": "npx -y serverest@latest --port 3000",
+    "test": "npx cypress run --spec \"cypress/e2e/exercicio-api.cy.js\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@faker-js/faker": "^8.3.1",
-    "cypress": "^13.6.0"
+    "cypress": "^13.6.0",
+    "joi": "^17.11.0"
   }
 }
